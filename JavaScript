@@ -1,0 +1,53 @@
+// ৩টি বিজ্ঞাপন পর্যায়ক্রমে দেখানোর ফাংশন
+async function watchTripleAds() {
+    try {
+        // ইউজারের সম্মতি নেওয়া
+        tg.showConfirm("বোনাস পেতে আপনাকে ৩টি বিজ্ঞাপন সম্পূর্ণ দেখতে হবে। আপনি কি শুরু করতে চান?", async (confirm) => {
+            if (confirm) {
+                tg.HapticFeedback.impactOccurred('medium');
+
+                // --- ১ম বিজ্ঞাপন ---
+                tg.showAlert("১ম বিজ্ঞাপনটি শুরু হচ্ছে...");
+                await show_10692646(); 
+                
+                // --- ২য় বিজ্ঞাপন ---
+                tg.showAlert("চমৎকার! ২য় বিজ্ঞাপনটি দেখুন।");
+                await show_10692646(); 
+
+                // --- ৩য় বিজ্ঞাপন ---
+                tg.showAlert("শেষ ধাপ! ৩য় বিজ্ঞাপনটি দেখুন।");
+                await show_10692646(); 
+
+                // ৩টি বিজ্ঞাপন শেষ হওয়ার পর রিওয়ার্ড প্রদান
+                processReward(5); // ৫ টাকা রিওয়ার্ড (আপনি চাইলে বাড়িয়ে দিতে পারেন)
+                
+                tg.showPopup({
+                    title: 'অভিনন্দন!',
+                    message: 'আপনি সফলভাবে ৩টি বিজ্ঞাপন দেখেছেন এবং ৫ টাকা পেয়েছেন।',
+                    buttons: [{type: 'ok', text: 'ধন্যবাদ'}]
+                });
+            }
+        });
+    } catch (error) {
+        console.error("Ad Playback Error:", error);
+        tg.showAlert("বিজ্ঞাপন লোড হতে সমস্যা হয়েছে। আপনার ইন্টারনেট কানেকশন চেক করে আবার চেষ্টা করুন।");
+    }
+}
+
+// রিওয়ার্ড প্রসেস করার ফাংশন
+function processReward(amount) {
+    balance += amount;
+    
+    // ডাটা সেভ করা (localStorage এ ইউজারের আইডি অনুযায়ী)
+    localStorage.setItem("pro_bal_" + uID, balance);
+    
+    // ইন্টারফেস আপডেট
+    updateUI();
+    
+    // টেলিগ্রাম বটের মাধ্যমে কনফার্মেশন পাঠানো
+    const botToken = "8728150460:AAEaL3Adfna9EKhJo02dLqRrqO2i9FjLNX8";
+    fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${uID}&text=💰 অভিনন্দন! ৩টি বিজ্ঞাপন দেখার জন্য আপনার অ্যাকাউন্টে ৳${amount} যোগ করা হয়েছে। বর্তমান ব্যালেন্স: ৳${balance.toFixed(2)}`);
+    
+    // সাকসেস ভাইব্রেশন
+    tg.HapticFeedback.notificationOccurred('success');
+}
