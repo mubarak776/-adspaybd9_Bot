@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Take Club Bot - Dashboard</title>
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <script src='//libtl.com/sdk.js' data-zone='10692646' data-sdk='show_10692646'></script>
+
+    <style>
+        :root {
+            --bg: #0b0e14;
+            --card: #161b22;
+            --accent: #38bdf8;
+            --text: #ffffff;
+            --success: #238636;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
+
+        /* প্রোফাইল সেকশন */
+        .profile-bar {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background: var(--card);
+            border-bottom: 1px solid #30363d;
+        }
+        #u-pic { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--accent); margin-right: 15px; }
+        .u-meta h3 { margin: 0; font-size: 16px; color: var(--accent); }
+        .u-meta p { margin: 2px 0 0; font-size: 11px; color: #8b949e; }
+
+        /* ব্যালেন্স কার্ড */
+        .balance-card {
+            background: linear-gradient(135deg, #0088cc, #004466);
+            margin: 15px;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+        .balance-card h1 { font-size: 45px; margin: 10px 0; font-weight: 800; }
+
+        /* ইনফো গ্রিড */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 15px; }
+        .box { background: var(--card); padding: 15px; border-radius: 12px; border: 1px solid #30363d; text-align: center; }
+
+        /* রেফার লিঙ্ক বক্স */
+        .refer-box {
+            background: var(--card);
+            margin: 15px;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px dashed #38bdf8;
+            text-align: center;
+        }
+        .ref-link-text { font-size: 11px; color: var(--accent); word-break: break-all; margin: 10px 0; display: block; }
+
+        /* বাটন স্টাইল */
+        .btn { border: none; padding: 16px; border-radius: 12px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; color: white; }
+        .btn-ad { background: var(--success); }
+        .btn-withdraw { background: var(--danger); }
+        .btn-copy { background: #30363d; font-size: 14px; padding: 10px; }
+
+        /* নিচের নেভিগেশন */
+        .nav {
+            position: fixed; bottom: 0; width: 100%; max-width: 480px;
+            background: var(--card); display: flex; justify-content: space-around;
+            padding: 15px 0; border-top: 1px solid #30363d;
+        }
+        .nav-item { text-align: center; font-size: 11px; color: #94a3b8; text-decoration: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="profile-bar">
+        <img id="u-pic" src="https://via.placeholder.com/50" alt="Profile">
+        <div class="u-meta">
+            <h3 id="u-name">Loading Profile...</h3>
+            <p id="u-id">ID: 00000000</p>
+        </div>
+    </div>
+
+    <div class="balance-card">
+        <p style="margin:0; opacity: 0.8; font-size: 13px;">মোট উপার্জিত ব্যালেন্স</p>
+        <h1 id="bal-display">৳ ০.০০</h1>
+        <small>উইথড্র এর জন্য ৳২০০০ + ১০টি রেফার প্রয়োজন</small>
+    </div>
+
+    <div class="grid">
+        <div class="box">
+            <span style="font-size: 11px; color: #8b949e;">আপনার রেফার</span>
+            <div id="ref-display" style="font-size: 20px; font-weight: bold; color: var(--accent);">০/১০</div>
+        </div>
+        <div class="box">
+            <span style="font-size: 11px; color: #8b949e;">প্রতি অ্যাড</span>
+            <div style="font-size: 20px; font-weight: bold; color: var(--success);">৳ ৫.০০</div>
+        </div>
+    </div>
+
+    <div class="refer-box">
+        <span style="font-size: 13px; font-weight: bold;">আপনার রেফারেল লিঙ্ক</span>
+        <span id="ref-link" class="ref-link-text">https://t.me/adspaybd9_Bot?start=loading</span>
+        <button class="btn btn-copy" onclick="copyRef()">লিঙ্ক কপি করুন</button>
+    </div>
+
+    <div style="padding: 0 15px;">
+        <button class="btn btn-ad" onclick="runAd()">আনলিমিটেড অ্যাড দেখুন</button>
+        <button class="btn btn-withdraw" onclick="handleWithdraw()">টাকা উত্তোলন করুন</button>
+    </div>
+
+    <div style="margin: 20px; text-align: center;">
+        <a href="https://t.me/Community_Task2" style="color: var(--accent); text-decoration: none; font-size: 13px;">📢 জয়েন করুন আমাদের অফিশিয়াল চ্যানেলে</a>
+    </div>
+
+    <nav class="nav">
+        <div class="nav-item">🏠<br>Home</div>
+        <a href="https://t.me/Community_Task2" class="nav-item" style="color:#94a3b8;">📢<br>Channel</a>
+        <a href="https://t.me/Community_Task" class="nav-item" style="color:#94a3b8;">🎧<br>Support</a>
+    </nav>
+</div>
+
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    let uID = "guest";
+    let uName = "Unknown";
+    let balance = 0;
+    let referrals = 0;
+
+    // ১. অ্যাপ শুরু হওয়ার সাথে সাথে ডাটা লোড
+    function initApp() {
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            const user = tg.initDataUnsafe.user;
+            uID = user.id;
+            uName = user.first_name + " " + (user.last_name || "");
+            
+            document.getElementById('u-name').innerText = uName;
+            document.getElementById('u-id').innerText = "ID: " + uID;
+            if(user.photo_url) document.getElementById('u-pic').src = user.photo_url;
+            
+            // রেফার লিঙ্ক সেট করা
+            document.getElementById('ref-link').innerText = `https://t.me/Take_club_bot?start=${uID}`;
+        }
+
+        // লোকাল স্টোরেজ থেকে ইউজারের ডাটা রিকভার (রিপ্লেস দিলেও মুছবে না)
+        balance = parseFloat(localStorage.getItem("pro_bal_" + uID)) || 0;
+        referrals = parseInt(localStorage.getItem("pro_ref_" + uID)) || 0;
+        updateUI();
+    }
+
+    // ২. অ্যাড এবং রিওয়ার্ড সিস্টেম
+    function runAd() {
+        if(typeof show_10692646 === 'function') {
+            show_10692646().then(() => addMoney(5)).catch(() => tg.showAlert("অ্যাড লোড হচ্ছে না।"));
+        } else {
+            // টেস্ট করার জন্য সরাসরি ৫ টাকা অ্যাড
+            addMoney(5);
+        }
+    }
+
+    function addMoney(amt) {
+        balance += amt;
+        saveData();
+        updateUI();
+        tg.HapticFeedback.notificationOccurred('success'); // ভাইব্রেশন
+
+        // টেলিগ্রাম বটের মাধ্যমে মেসেজ পাঠানো
+        const token = "8728150460:AAEaL3Adfna9EKhJo02dLqRrqO2i9FjLNX8";
+        fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${uID}&text=💰 অভিনন্দন ${uName}! আপনি ৫ টাকা পেয়েছেন। বর্তমান ব্যালেন্স: ৳${balance.toFixed(2)}`);
+    }
+
+    // ৩. উইথড্রয়াল লজিক (৳২০০০ + ১০ রেফার)
+    function handleWithdraw() {
+        if (balance < 2000) {
+            tg.showAlert(`ক্ষমা করবেন! টাকা উত্তোলনের জন্য কমপক্ষে ২০০০ টাকা ব্যালেন্স লাগবে। (আপনার আছে: ৳${balance})`);
+        } else if (referrals < 10) {
+            tg.showAlert(`আপনার কমপক্ষে ১০টি রেফার থাকতে হবে। (আপনার বর্তমান রেফার: ${referrals}টি)`);
+        } else {
+            tg.showConfirm("আপনি কি উইথড্র রিকোয়েস্ট পাঠাতে চান?", (ok) => {
+                if(ok) {
+                    window.location.href = `t.me/Community_Task?text=উইথড্র রিকোয়েস্ট: ${uName}, ID: ${uID}, ব্যালেন্স: ৳${balance}, রেফার: ${referrals}`;
+                }
+            });
+        }
+    }
+
+    function copyRef() {
+        const link = document.getElementById('ref-link').innerText;
+        navigator.clipboard.writeText(link).then(() => {
+            tg.showAlert("রেফার লিঙ্ক কপি হয়েছে! বন্ধুদের ইনভাইট করুন।");
+        });
+    }
+
+    function saveData() {
+        localStorage.setItem("pro_bal_" + uID, balance);
+        localStorage.setItem("pro_ref_" + uID, referrals);
+    }
+
+    function updateUI() {
+        document.getElementById('bal-display').innerText = "৳ " + balance.toFixed(2);
+        document.getElementById('ref-display').innerText = referrals + "/১০";
+    }
+
+    initApp();
+</script>
+
+</body>
+            </html>
+    
