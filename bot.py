@@ -2,7 +2,7 @@ import logging
 import os
 import sqlite3
 from flask import Flask
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, CallbackQueryHandler
 
 # Flask app keeping Render Web Service alive for FREE
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 TOKEN = "8728150460:AAEaL3Adfna9EKhJo02dLqRrqO2i9FjLNX8"
 CHANNEL_USERNAME = "@IslamicNoorBD09"
-GROUP_INVITE_LINK = "https://t.me/EasilySuhogEinw21"
+GROUP_INVITE_LINK = "https://t.me/Community_Task2"
 MINI_APP_URL = "https://mubarak776.github.io/-adspaybd9_Bot/"
 
 conn = sqlite3.connect('bot_users.db', check_same_thread=False)
@@ -60,7 +60,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             f"👋 আসসালামু আলাইকুম, {user.first_name}!\n\n"
             f"⚠️ বটে পরবর্তী কাজ করার জন্য আমাদের অফিশিয়াল চ্যানেল ও গ্রুপে জয়েন করতে হবে।\n\n"
-            f"👉 নিচে জয়েন করে এরপরে **'Verify'** বাটنه ক্লিক করুন 👈",
+            f"👉 নিচে জয়েন করে এরপরে **'Verify'** বাটনে ক্লিক করুন 👈",
             reply_markup=reply_markup
         )
     else:
@@ -119,4 +119,4 @@ if __name__ == '__main__':
     from threading import Thread
     Thread(target=main).start()
     app.run(host='0.0.0.0', port=port)
-        
+                     
