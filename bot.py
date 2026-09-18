@@ -6,7 +6,7 @@ from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 # আপনার টেলিগ্রাম বটের টোকেন এখানে বসাবেন (যদি আগে অন্য টোকেন দিয়ে থাকেন)
-TOKEN = "YOUR_BOT_TOKEN_HERE"
+TOKEN = "8728150460:AAEaL3Adfna9EKhJo02dLqRrqO2i9FjLNX8"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
